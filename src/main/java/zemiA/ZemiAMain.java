@@ -21,7 +21,7 @@ public class ZemiAMain {
       return;
     }
 
-    final ASTParser parser = ASTParser.newParser(AST.JLS10);
+    final ASTParser parser = ASTParser.newParser(AST.JLS11);
     parser.setSource(String.join(System.lineSeparator(), lines).toCharArray());
 
     CompilationUnit unit = null;
