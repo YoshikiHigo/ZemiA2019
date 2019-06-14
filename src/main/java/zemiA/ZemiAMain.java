@@ -18,6 +18,7 @@ public class ZemiAMain {
       lines = Files.readAllLines(Paths.get("src/main/java/zemiA/ZemiAMain.java"),
           StandardCharsets.ISO_8859_1);
       System.out.println("A");
+      System.out.println("Wada");
     } catch (final Exception e) {
       System.err.println(e.getMessage());
       return;
