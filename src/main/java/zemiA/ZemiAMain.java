@@ -23,7 +23,7 @@ public class ZemiAMain {
       System.err.println(e.getMessage());
       return;
     }
-
+    System.out.println("Hello, Wold. I love Java!");
     final ASTParser parser = ASTParser.newParser(AST.JLS11);
     parser.setSource(String.join(System.lineSeparator(), lines).toCharArray());
 
