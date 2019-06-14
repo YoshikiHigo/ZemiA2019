@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -35,5 +36,7 @@ public class ZemiAMain {
 
     final ZemiAVisitor visitor = new ZemiAVisitor();
     unit.accept(visitor);
+
+    return;  // return 文忘れていますよ！
   }
 }

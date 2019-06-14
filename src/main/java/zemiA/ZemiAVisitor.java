@@ -2,14 +2,14 @@ package zemiA;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.Statement;
 
 public class ZemiAVisitor extends ASTVisitor {
 
   @Override
   public boolean visit(SimpleName node) {
-    System.out.println(node.getIdentifier());
+    // System.out.println(node.getIdentifier());
     return super.visit(node);
   }
 
@@ -18,4 +18,12 @@ public class ZemiAVisitor extends ASTVisitor {
     // System.out.println(node.toString());
     return super.visit(node);
   }
+
+  @Override
+  public boolean visit(ReturnStatement node) {
+	// TODO 自動生成されたメソッド・スタブ
+	return super.visit(node);
+  }
+
+
 }
