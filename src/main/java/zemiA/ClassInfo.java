@@ -11,10 +11,6 @@ import java.util.HashSet;
 public class ClassInfo implements ElementInfo {
 
 	/* ----- Attribute: 属性 ----- */
-	enum ClassAbstraction {
-		NORMAL_CLASS, ABSTRACT_CLASS, INTERFACE_CLASS
-	}
-
 	private AccessModifier accessModifier;  // アクセス修飾子
 	private ClassAbstraction classAbstraction;  // クラスの抽象度
 	private String name;  // クラスの名前
@@ -26,6 +22,10 @@ public class ClassInfo implements ElementInfo {
 	// private int numInherited;  // 継承された回数
 
 	private HashSet<Disharmony> disharmnonySet;  // Disharmonyの集合
+
+
+	/* メトリクス */
+
 
 
 	/* ----- コンストラクタ ----- */
@@ -83,6 +83,20 @@ public class ClassInfo implements ElementInfo {
 	}
 
 
+	/* ----- setterメソッド ----- */
+	@Override
+	public AccessModifier getAccessModifier() {
+		// TODO 自動生成されたメソッド・スタブ
+		return this.accessModifier;
+	}
+
+	@Override
+	public String getName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return new String(this.name);
+	}
+
+
 	/* ----- Method: メソッド ----- */
 	@Override
 	public String toString() {
@@ -96,6 +110,7 @@ public class ClassInfo implements ElementInfo {
 		return str;
 	}
 
+
 	@Override
 	public boolean equals(Object obj) {
 		// TODO 自動生成されたメソッド・スタブ
@@ -105,11 +120,9 @@ public class ClassInfo implements ElementInfo {
 		ClassInfo classInfo = (ClassInfo) obj;
 
 		if ( !(classInfo.name).equals(this.name) )  return false;
-		if ( !(classInfo.accessModifier).equals(this.accessModifier) )  return false;
-		if ( !(classInfo.classAbstraction).equals(this.classAbstraction) )  return false;
-		if ( !(classInfo.superClassName).equals(this.superClassName) )  return false;
 		return true;
 	}
+
 
 	@Override
 	public int hashCode() {

@@ -3,9 +3,8 @@ package zemiA;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import zemiA.ClassInfo.ClassAbstraction;
-import zemiA.ElementInfo.AccessModifier;
-import zemiA.ElementInfo.Disharmony;
+
+
 
 /**
  * @author gruidae

@@ -18,9 +18,12 @@ public class MethodInfo implements ElementInfo {
 	private boolean isAbstract;  // 抽象メソッドか否か
 	private String returnType;  // 返し値の型  (null: コンストラクタ)
 	private String name;  // 名前
-	private ArrayList<String> argumentsList= new ArrayList<String>();  // 引数リスト
+	private ArrayList<String> argumentsList= new ArrayList<String>();  // 引数の型リスト
 
 	private HashSet<Disharmony> disharmnonySet;  // Disharmonyの集合
+
+
+	/* メトリクス */
 
 
 	/* ----- Constructor: コンストラクタ ----- */
@@ -40,6 +43,20 @@ public class MethodInfo implements ElementInfo {
 
 		/* 引数リストを保存 */
 		return;
+	}
+
+
+	/* ----- getterメソッド ----- */
+	@Override
+	public AccessModifier getAccessModifier() {
+		// TODO 自動生成されたメソッド・スタブ
+		return this.accessModifier;
+	}
+
+	@Override
+	public String getName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return new String(this.name);
 	}
 
 
@@ -89,6 +106,14 @@ public class MethodInfo implements ElementInfo {
 	}
 
 
+	public void setArgumentsList(ArrayList<String> argumentsList)
+	{
+		for ( String type: argumentsList) {
+			this.argumentsList.add(new String(type));
+		}
+	}
+
+
 	/* ----- Method: メソッド ----- */
 	@Override
 	public String toString() {
@@ -116,11 +141,11 @@ public class MethodInfo implements ElementInfo {
 
 		if ( !(methodInfo.definedClass).equals(this.definedClass) )  return false;
 		if ( !(methodInfo.name).equals(this.name) )  return false;
-		if ( !(methodInfo.returnType).equals(this.returnType) )  return false;
+		// if ( !(methodInfo.returnType).equals(this.returnType) )  return false;
 		if ( !(methodInfo.argumentsList).equals(this.argumentsList) )  return false;  // リストの比較はequalsでいいのか？
-		if ( !(methodInfo.accessModifier).equals(this.accessModifier) )  return false;
-		if ( methodInfo.isStatic != this.isStatic )  return false;
-		if ( methodInfo.isAbstract != this.isAbstract )  return false;
+		// if ( !(methodInfo.accessModifier).equals(this.accessModifier) )  return false;
+		// if ( methodInfo.isStatic != this.isStatic )  return false;
+		// if ( methodInfo.isAbstract != this.isAbstract )  return false;
 		return true;
 	}
 

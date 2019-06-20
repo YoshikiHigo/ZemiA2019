@@ -20,6 +20,9 @@ public class AttributeInfo implements ElementInfo {
 	private HashSet<Disharmony> disharmnonySet;  // Disharmonyの集合
 
 
+	/* メトリクス */
+
+
 	/* ----- Constructor: コンストラクタ ----- */
 	AttributeInfo(String name) {
 		this.setName(name);  return;
@@ -33,6 +36,20 @@ public class AttributeInfo implements ElementInfo {
 		this.setName(name);
 
 		return;
+	}
+
+
+	/* ----- getterメソッド ----- */
+	@Override
+	public AccessModifier getAccessModifier() {
+		// TODO 自動生成されたメソッド・スタブ
+		return this.accessModifier;
+	}
+
+	@Override
+	public String getName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return new String(this.name);
 	}
 
 
@@ -100,8 +117,8 @@ public class AttributeInfo implements ElementInfo {
 		if ( !(attributeInfo.definedClass).equals(this.definedClass) )  return false;
 		if ( !(attributeInfo.name).equals(this.name) )  return false;
 		if ( !(attributeInfo.type).equals(this.type) )  return false;
-		if ( !(attributeInfo.accessModifier).equals(this.accessModifier) )  return false;
-		if ( attributeInfo.isStatic != this.isStatic )  return false;
+		// if ( !(attributeInfo.accessModifier).equals(this.accessModifier) )  return false;
+		// if ( attributeInfo.isStatic != this.isStatic )  return false;
 		return true;
 	}
 

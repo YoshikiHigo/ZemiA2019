@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.dom.DoStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.LineComment;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.ModuleDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -99,8 +100,16 @@ public class ZemiAVisitor extends ASTVisitor {
 		return super.visit(node);
 	}
 
+
 	@Override
-	public boolean visit(ModuleDeclaration node) {
+	public boolean visit(LineComment node) {
+		// TODO 自動生成されたメソッド・スタブ
+		System.err.println(node.toString());
+		return super.visit(node);
+	}
+
+	@Override
+	public boolean visit(ModuleDeclaration node) {  //
 		// TODO 自動生成されたメソッド・スタブ
 		System.out.println(node.toString());
 		return super.visit(node);
@@ -207,5 +216,7 @@ public class ZemiAVisitor extends ASTVisitor {
 		// System.err.println(node.toString());
 		return super.visit(node);
 	}
+
+	/* visit(LineComment) は何もしない. */
 
 }
