@@ -27,18 +27,26 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 
 public class ZemiAVisitor extends ASTVisitor {
 
+	/* 実装済み:
+	 *
+	 * 不完全実装:
+	 *
+	 * 未実装:
+	 * LOC (空行, コメント行がカウントできない), NOM (public クラスのみ実装), CYCLO (クラスごと, メソッドごと必要)
+	 **/
+
+
 	/* ----- Attribute: 属性 ----- */
 	private int atfd = 0;        // 外部クラスからのアクセス数 (getter, setterメソッド含む)
-	private int cc = 0;          //
-	private int cdisp = 0;       //
-	private int cint = 0;        // 測定中の処理によって呼ばれるメソッド数.
+	private int cc = 0;          // 測定中メソッドが呼び出すクラス数
+	private int cint = 0;        // 測定中のメソッドによって呼ばれるメソッド総数.
 	private int cm = 0;          // 測定中のメソッドが呼び出すメソッド数 (再帰呼び出しは除く)
-	private int cyclo = 0;       // 線形分岐の数
+	private int cyclo = 0;       // 線形分岐の数 (if, caseなどの条件分岐, forなどの繰り返しなど)
 	private int fdp = 0;         // アクセスした属性が定義されているクラスの数
 	private int loc = 0;         // 空行, コメント行を含めた行数
 	private int maxNesting = 0;  // {} の最大ネスト数
 	private int nas = 0;         // 子クラスで定義したpublicメソッド数
-	private int noam = 0;        // getter, putterメソッド数
+	private int noam = 0;        // getter, setterメソッド数
 	private int noav = 0;        // アクセスする変数の総数 (引数 (parameter), local, インスタンス, global変数)
 	private int nom = 0;         // メソッド数
 	private int nopa = 0;        // public属性数
@@ -49,7 +57,6 @@ public class ZemiAVisitor extends ASTVisitor {
 	/* ----- getter メソッド ----- */
 	public int getATFD() { return this.atfd; }
 	public int getCC() { return this.cc; }
-	public int getCDISP() { return this.cdisp; }
 	public int getCINT() { return this.cint; }
 	public int getCM() { return this.cm; }
 	public int getCYCLO() { return this.cyclo; }
@@ -210,6 +217,7 @@ public class ZemiAVisitor extends ASTVisitor {
 		return super.visit(node);
 	}
 
+
 	@Override
 	public boolean visit(SuperMethodReference node) {  // 親クラスで定義されたメソッドの参照を検出
 		// TODO 自動生成されたメソッド・スタブ
@@ -217,6 +225,8 @@ public class ZemiAVisitor extends ASTVisitor {
 		return super.visit(node);
 	}
 
-	/* visit(LineComment) は何もしない. */
+	/* visit(LineComment)
+	 *  は何もしない.
+	 *  */
 
 }
