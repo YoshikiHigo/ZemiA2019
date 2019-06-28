@@ -1,6 +1,7 @@
 package zemiA;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 
@@ -20,10 +21,23 @@ public class MethodInfo implements ElementInfo {
 	private String name;  // 名前
 	private ArrayList<String> argumentsList= new ArrayList<String>();  // 引数の型リスト
 
+	private HashMap<String, String> variableMap = new HashMap<String, String>();  // ローカル変数名と型名のマップ
+
 	private HashSet<Disharmony> disharmnonySet;  // Disharmonyの集合
 
-
 	/* メトリクス */
+	private int atfd = 0;        // 外部クラスからのアクセス数 (getter, setterメソッド含む)
+	private int cc = 0;          // 測定中メソッドが呼び出すクラス数
+	private int cint = 0;        // 測定中の処理によって呼ばれるメソッド数.
+	private int cm = 0;          // 測定中のメソッドが呼び出すメソッド数 (再帰呼び出しは除く)
+	private int cyclo = 0;       // 線形分岐の数
+	private int fdp = 0;         // アクセスした属性が定義されているクラスの数
+	private int loc = 0;         // 空行, コメント行を含めた行数
+	private int maxNesting = 0;  // {} の最大ネスト数
+	private int noav = 0;        // アクセスする変数の総数 (引数 (parameter), local, インスタンス, global変数)
+
+	private double cdisp = 0;
+	private double laa = 0;
 
 
 	/* ----- Constructor: コンストラクタ ----- */
@@ -31,17 +45,31 @@ public class MethodInfo implements ElementInfo {
 		this.setName(name);  return;
 	}
 
+	MethodInfo(String definedClass, String name) {
+		this.setDefinedClass(definedClass);
+		this.setName(name);
+		return;
+	}
+
+	MethodInfo(String definedClass, String returnType, String name) {
+		this.setDefinedClass(definedClass);
+		this.setReturnType(returnType);
+		this.setName(name);
+		return;
+	}
+
 	MethodInfo
 	(String definedClass, String accessModifier, boolean isStatic, boolean isAbstract,
-			boolean returnType, String name)
+		 String returnType, String name)
 	{
 		this.setDefinedClass(definedClass);
 		this.setAccessModifier(accessModifier);
 		this.setIsStatic(isStatic);
 		this.setIsAbstract(isAbstract);
+		this.setReturnType(returnType);
 		this.setName(name);
 
-		/* 引数リストを保存 */
+		/* 引数リストを保存 (未実装) */
 		return;
 	}
 
@@ -59,6 +87,18 @@ public class MethodInfo implements ElementInfo {
 		return new String(this.name);
 	}
 
+	public int getATFD() { return this.atfd; }
+	public int getCC() { return this.cc; }
+	public int getCINT() { return this.cint; }
+	public int getCM() { return this.cm; }
+	public int getCYCLO() { return this.cyclo; }
+	public int getFDP() { return this.fdp; }
+	public int getLOC() { return this.loc; }
+	public int getMAXNESTING() { return this.maxNesting; }
+	public int getNOAV() { return this.noav; }
+
+	public double getCDISP() { return this.cdisp; }
+	public double getLAA() { return this.laa; }
 
 	/* ----- setter メソッド ----- */
 	public void setDefinedClass(String definedClass)
@@ -113,8 +153,24 @@ public class MethodInfo implements ElementInfo {
 		}
 	}
 
+	public void setATFD(int atfd) { this.atfd = atfd; }
+	public void setCC(int cc) { this.cc = cc; }
+	public void setCINT(int cint) { this.cint = cint; }
+	public void setCM(int cm) { this.cm = cm; }
+	public void setCYCLO(int cyclo) { this.cyclo = cyclo; }
+	public void setFDP(int fdp) { this.fdp = fdp; }
+	public void setLOC(int loc) { this.loc = loc; }
+	public void setMAXNESTING(int maxNesting) { this.maxNesting = maxNesting; }
+	public void setNOAV(int noav) { this.noav = noav; }
+
 
 	/* ----- Method: メソッド ----- */
+	void calculateMetrics()
+	{
+		/* LAA の値を計算 */
+	}
+
+
 	@Override
 	public String toString() {
 		// TODO 自動生成されたメソッド・スタブ
@@ -141,27 +197,18 @@ public class MethodInfo implements ElementInfo {
 
 		if ( !(methodInfo.definedClass).equals(this.definedClass) )  return false;
 		if ( !(methodInfo.name).equals(this.name) )  return false;
-		// if ( !(methodInfo.returnType).equals(this.returnType) )  return false;
-		if ( !(methodInfo.argumentsList).equals(this.argumentsList) )  return false;  // リストの比較はequalsでいいのか？
-		// if ( !(methodInfo.accessModifier).equals(this.accessModifier) )  return false;
-		// if ( methodInfo.isStatic != this.isStatic )  return false;
-		// if ( methodInfo.isAbstract != this.isAbstract )  return false;
+		if ( !(methodInfo.argumentsList).equals(this.argumentsList) )  return false;
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
 		// TODO 自動生成されたメソッド・スタブ
-		final int HASH_START = 100, HASH_CONSTANT = 10;
+		final int HASH_START = 100;
 		int hash = HASH_START;
 		hash = ( hash << 5 ) + this.definedClass.hashCode();
 		hash = ( hash << 5 ) + this.name.hashCode();
-		hash = ( hash << 5 ) + this.returnType.hashCode();
 		hash = ( hash << 5 ) + this.argumentsList.hashCode();
-		hash = ( hash << 5 ) + this.accessModifier.hashCode();
-		hash = this.isStatic?( (hash << 5) + HASH_CONSTANT):(hash << 5);
-		hash = this.isAbstract?( (hash << 5) + HASH_CONSTANT * 2):(hash << 5);
 		return hash;
 	}
-
 }

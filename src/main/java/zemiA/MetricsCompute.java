@@ -34,10 +34,22 @@ public class MetricsCompute {
 	}
 
 
-	/** LAA の値を計算する. */
-	public static double localityOfAttributeAccesses(int atfd, int accessecVariables)
+	/**
+	 * CDISP の値を計算する.
+	 * @param classNum The number of classes in whitch
+	 * the operations called from the measured operation are defined
+	 */
+	public static double couplingDispersion(int classNum, int cint)
 	{
-		double laa = (double)atfd/accessecVariables;
+		double cdisp = (double)classNum / cint;
+		return cdisp;
+	}
+
+
+	/** LAA の値を計算する. */
+	public static double localityOfAttributeAccesses(int atfd, int accessedVariables)
+	{
+		double laa = (double)atfd/accessedVariables;
 		return laa;
 	}
 

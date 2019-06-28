@@ -1,7 +1,6 @@
 package zemiA;
 
-
-
+import java.util.HashSet;
 
 /**
  * @author gruidaer
@@ -58,84 +57,240 @@ public class DetectionDisharmony {
 	private static final int THREE = 3;
 	private static final int FEW = 3;
 	private static final int SEVERAL = 5;
-	private static final int SHORT_MEMORY_CAPACiTY = 7;
-	private static final int MANY = 20;
+	private static final int SHORT_MEMORY_CAPACITY = 7;
+	private static final int MANY = 10;
 
 	/* ----- Disharmony 検出メソッド ----- */
-//	/* God Class 検出 */
-//	private static boolean isGodClass(ClassInfo classInfo)
-//	{
-//		if ( classInfo.getATFD() > FEW
-//				&& classInfo.getWMC() >= METRIC[WMC][VERY_HIGH]
-//				&& classInfo.getTCC() < ONE_THIRD) {
-//			return true;
-//		} else  return false;
-//	}
-//
-//	/* Feature Envy 検出 */
-//	private static boolean isFeatureEnvy(MethodInfo methodInfo)
-//	{
-//		if ( methodInfo.getATFD() > FEW
-//				&& methodInfo.getLAA() < ONE_THIRD
-//				&& methodInfo.getFDP() <= FEW ) {
-//			return true;
-//		} else  return false;
-//	}
-//
-//	/* Data Class 検出 */
-//	private static boolean isDataClass(ClassInfo classInfo)
-//	{
-//		if ( classInfo.getWOC() < ONE_THIRD ) {
-//			if ( classInfo.getNOAP() + classInfo.getNOAM() > FEW
-//					&& classInfo.getWMC() < METRIC[WMC][HIGH] ) {
-//				return true;
-//			} else if ( classInfo.getNOAP() + classInfo.getNOAM() > MANY
-//					&& (double)classInfo.getWMC() < METRIC[WMC][VERY_HIGH] ) {
-//				return true;
-//			} else  return false;
-//		} else  return false;
-//	}
-//
-//	/* Brain Method 検出 */
-//	private static boolean isBrainMethod(MethodInfo methodInfo)
-//	{
-//		if ( (double)methodInfo.getLOC() >  METRIC[LOC_PER_CLASS][HIGH]/2
-//				&& (double)methodInfo.getCYCLO() >= METRIC[CYCLO_PER_LINE_OF_CODE][HIGH]
-//				&& methodInfo.getMAXNESTING() >= SEVERAL
-//				&& methodInfo.getNOAV() > MANY) {
-//			return true;
-//		} else  return false;
-//	}
-//
-//	/* Brain Class 検出 */
-//	private static boolean isBrainClass(ClassInfo classInfo)
-//	{
-//		if ( classInfo.getWMC() >= METRIC[WMC][VERY_HIGH]
-//				&& classInfo.getTCC() < HALF ) {
-//			if( classInfo.getBrainMethodNum() >= 1
-//				&& (double)classInfo.getLOC() >=  METRIC[LOC_PER_CLASS][VERY_HIGH]) {
-//				return true;
-//			} else if ( classInfo.getBrainMethodNum() == 1
-//					&& (double)classInfo.getLOC() >= 2 * METRIC[LOC_PER_CLASS][VERY_HIGH]
-//					&& (double)classInfo.getWMC() >= 2 * METRIC[WMC][VERY_HIGH]) {
-//				return true;
-//			} else  return false;
-//		} else  return false;
-//	}
-//
-//	/* Significant Duplication 検出 */
-//	private static boolean isSignificantDuplication
-//	(double sizeOfExactClone, int lineBias, int sizeOfDuplicationChain)
-//	{
-//		if ( sizeOfExactClone > METRIC[LOC_PER_OPERATION][AVERAGE] ) {
-//			return true;
-//		} else {
-//			if ( sizeOfDuplicationChain >= 2 * ( FEW + 1 )+1
-//					&& sizeOfExactClone > (double)FEW
-//					&& lineBias <= FEW ) {
-//				return true;
-//			} else  return false;
-//		}
-//	}
+	/* God Class 検出 */
+	public static boolean isGodClass(ClassInfo classInfo)
+	{
+		if ( classInfo.getATFD() > FEW
+				&& classInfo.getWMC() >= METRIC[WMC][VERY_HIGH]
+				&& classInfo.getTCC() < ONE_THIRD) {
+			return true;
+		} else  return false;
+	}
+
+	/* Feature Envy 検出 */
+	public static boolean isFeatureEnvy(MethodInfo methodInfo)
+	{
+		if ( methodInfo.getATFD() > FEW
+				&& methodInfo.getLAA() < ONE_THIRD
+				&& methodInfo.getFDP() <= FEW ) {
+			return true;
+		} else  return false;
+	}
+
+	/* Data Class 検出 */
+	public static boolean isDataClass(ClassInfo classInfo)
+	{
+		if ( classInfo.getWOC() < ONE_THIRD ) {
+			if ( classInfo.getNOAP() + classInfo.getNOAM() > FEW
+					&& classInfo.getWMC() < METRIC[WMC][HIGH] ) {
+				return true;
+			} else if ( classInfo.getNOAP() + classInfo.getNOAM() > MANY
+					&& classInfo.getWMC() < METRIC[WMC][VERY_HIGH] ) {
+				return true;
+			} else  return false;
+		} else  return false;
+	}
+
+	/* Brain Method 検出 */
+	public static boolean isBrainMethod(MethodInfo methodInfo)
+	{
+		if ( (double)methodInfo.getLOC() >  METRIC[LOC_PER_METHOD][HIGH]/2
+				&& (double)methodInfo.getCYCLO() / methodInfo.getLOC()
+						>= METRIC[CYCLO_PER_LINE_OF_CODE][HIGH]
+				&& methodInfo.getMAXNESTING() >= SEVERAL
+				&& methodInfo.getNOAV() > MANY) {
+			return true;
+		} else  return false;
+	}
+
+	/* Brain Class 検出 */
+	public static boolean isBrainClass(ClassInfo classInfo)
+	{
+		if ( classInfo.getWMC() >= METRIC[WMC][VERY_HIGH]
+				&& classInfo.getTCC() < HALF ) {
+			if( classInfo.getBrainMethodNum() >= 1
+				&& (double)classInfo.getLOC() >=  METRIC[LOC_PER_CLASS][VERY_HIGH]) {
+				return true;
+			} else if ( classInfo.getBrainMethodNum() == 1
+					&& (double)classInfo.getLOC() >= 2 * METRIC[LOC_PER_CLASS][VERY_HIGH]
+					&& (double)classInfo.getWMC() >= 2 * METRIC[WMC][VERY_HIGH]) {
+				return true;
+			} else  return false;
+		} else  return false;
+	}
+
+	/* Significant Duplication 検出 */
+	public static boolean isSignificantDuplication
+	(double sizeOfExactClone, int lineBias, int sizeOfDuplicationChain)
+	{
+		if ( sizeOfExactClone > METRIC[LOC_PER_OPERATION][AVERAGE] ) {
+			return true;
+		} else {
+			if ( sizeOfDuplicationChain >= 2 * ( FEW + 1 )+1
+					&& sizeOfExactClone > (double)FEW
+					&& lineBias <= FEW ) {
+				return true;
+			} else  return false;
+		}
+	}
+
+	/* Intensive Coupling 検出 */
+	public static boolean isIntensiveCoupling(MethodInfo methodInfo)
+	{
+		if (methodInfo.getMAXNESTING() > SHALLOW) {
+			if (methodInfo.getCINT() > SHORT_MEMORY_CAPACITY
+					&& methodInfo.getCDISP() < HALF) {
+				return true;
+			} else if (methodInfo.getCINT() > FEW  && methodInfo.getCDISP() < ONE_QUATER) {
+				return true;
+			} else return false;
+		} else  return false;
+	}
+
+	/* Dispersed Coupling 検出 */
+	public static boolean isDispersedCoupling(MethodInfo methodInfo)
+	{
+		if (methodInfo.getMAXNESTING() > SHALLOW) {
+			if (methodInfo.getCINT() > SHORT_MEMORY_CAPACITY
+					&& methodInfo.getCDISP() > HALF) {
+				return true;
+			} else return false;
+		} else  return false;
+	}
+
+	/* ShotGun Surgery 検出 */
+	public static boolean isShotgunSurgery(MethodInfo methodInfo)
+	{
+		if (methodInfo.getCM() > SHORT_MEMORY_CAPACITY
+				&& methodInfo.getCC() > HALF) {
+			return true;
+		} else return false;
+	}
+
+	/* Refused Parent Bequest 検出 */
+	public static boolean isRefusedParentBequest(ClassInfo classInfo)
+	{
+		boolean isIgnored = false, isLargeComplex = false;
+		if ( classInfo.getBOvR() < ONE_THIRD ) {
+			isIgnored = true;
+		} else if ( classInfo.getNProtM() > FEW && classInfo.getBUR() < ONE_THIRD ) {
+			isIgnored = true;
+		} else isIgnored = false;
+
+		if ( (double)classInfo.getNOM() > METRIC[NOM_PER_CLASS][AVERAGE] ) {
+			if ( classInfo.getAMW() > METRIC[AMW][AVERAGE] ) {
+				isLargeComplex = true;
+			} else if ( classInfo.getWMC() > METRIC[WMC][AVERAGE] ) {
+				isLargeComplex = true;
+			} else  isLargeComplex = false;
+		} else isLargeComplex = false;
+
+		if (isIgnored && isLargeComplex)  return true;
+		else  return false;
+	}
+
+	/* Tradition Breaker 検出 */
+	public static boolean isTraditionBreaker(ClassInfo child, ClassInfo parent)
+	{
+		boolean isExcessiveChild = false, isComplexChild = false, isParentLarge = false;
+
+		if ( (double)child.getNAS() >= METRIC[NOM_PER_CLASS][AVERAGE]
+				&& child.getPNAS() >= TWO_THIRDS) {
+			isExcessiveChild = true;
+		} else  isExcessiveChild = false;
+
+		if ( (double)child.getNOM() >= METRIC[NOM_PER_CLASS][HIGH] ) {
+			if ( child.getAMW() > METRIC[AMW][AVERAGE] ) {
+				isComplexChild = true;
+			} else if ( child.getWMC() >= METRIC[WMC][VERY_HIGH] ) {
+				isComplexChild = true;
+			} else  isComplexChild = false;
+		} else  isComplexChild = false;
+
+		if ( parent.getAMW() > METRIC[WMC][AVERAGE]
+				&& (double)parent.getNOM() > METRIC[NOM_PER_CLASS][HIGH]/ 2
+				&& parent.getWMC() >= METRIC[WMC][VERY_HIGH]/ 2 ) {
+			isParentLarge = true;
+		} else  isParentLarge = false;
+
+		if( isExcessiveChild && isComplexChild && isParentLarge )  return true;
+		return false;
+	}
+
+
+	public static Disharmony godClass(ClassInfo classInfo) {
+		if( isGodClass(classInfo) )  return Disharmony.GOD_CLASS;
+		else  return null;
+	}
+
+	public static Disharmony featureEnvy(MethodInfo methodInfo) {
+		if( isFeatureEnvy(methodInfo) )  return Disharmony.FEATURE_ENVY;
+		else  return null;
+	}
+
+	public static Disharmony brainMethod(MethodInfo methodInfo) {
+		if( isBrainMethod(methodInfo) )  return Disharmony.BRAIN_METHOD;
+		else  return null;
+	}
+
+	public static Disharmony brainClass(ClassInfo classInfo) {
+		if( isBrainClass(classInfo) )  return Disharmony.BRAIN_CLASS;
+		else  return null;
+	}
+
+	public static Disharmony dataClass(ClassInfo classInfo) {
+		if( isDataClass(classInfo) )  return Disharmony.DATA_CLASS;
+		else  return null;
+	}
+
+	/*
+	public static Disharmony significantDuplication(ClassInfo classInfo) {
+		if( isSignificantDuplication() )  return Disharmony.SIGNIFICANT_DUPLICATION;
+		else  return null;
+	}
+	*/
+
+
+	public static Disharmony intensiveCoupling(MethodInfo methodInfo) {
+		if( isIntensiveCoupling(methodInfo) )  return Disharmony.INTENSIVE_COUPLING;
+		else  return null;
+	}
+
+	public static Disharmony dispersedCoupling(MethodInfo methodInfo) {
+		if( isDispersedCoupling(methodInfo) )  return Disharmony.DISPERSED_COUPLING;
+		else  return null;
+	}
+
+	public static Disharmony shotgunSurgery(MethodInfo methodInfo) {
+		if( isShotgunSurgery(methodInfo) )  return Disharmony.SHOTGUN_SURGERY;
+		else  return null;
+	}
+
+	public static Disharmony refusedParentBequest(ClassInfo classInfo) {
+		if( isRefusedParentBequest(classInfo) )  return Disharmony.REFUSED_PARENT_BEQUEST;
+		else  return null;
+	}
+
+	public static Disharmony traditionBreaker(ClassInfo child, HashSet<ClassInfo> classSet) {
+		ClassInfo parent = new ClassInfo( child.getSuperClassName() );
+
+		boolean canGetParent = false;
+		for ( ClassInfo classInfo: classSet ) {
+			if ( classSet.contains(parent) ) {
+				parent = classInfo;
+				canGetParent = true;  break;
+			}
+		}
+
+		if ( canGetParent ) {
+			if( isTraditionBreaker(child, parent) )  return Disharmony.TRADITION_BREAKER;
+			else  return null;
+		}  else  return null;
+	}
+
 
 }

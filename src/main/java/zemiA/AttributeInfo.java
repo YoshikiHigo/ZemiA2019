@@ -1,10 +1,5 @@
 package zemiA;
 
-import java.util.HashSet;
-
-
-
-
 /**
  * @author gruidae
  */
@@ -17,15 +12,24 @@ public class AttributeInfo implements ElementInfo {
 	private String type;  // 型
 	private String name;  // 名前
 
-	private HashSet<Disharmony> disharmnonySet;  // Disharmonyの集合
-
-
-	/* メトリクス */
-
 
 	/* ----- Constructor: コンストラクタ ----- */
 	AttributeInfo(String name) {
 		this.setName(name);  return;
+	}
+
+	AttributeInfo(String definedClass, String name) {
+		this.setDefinedClass(definedClass);
+		this.setName(name);
+		return;
+	}
+
+	AttributeInfo(String definedClass, String type, String name) {
+		this.setDefinedClass(definedClass);
+		this.setType(type);
+		this.setName(name);
+
+		return;
 	}
 
 	AttributeInfo(String definedClass, String accessModifier, boolean isStatic, String type, String name) {
@@ -99,10 +103,9 @@ public class AttributeInfo implements ElementInfo {
 		// TODO 自動生成されたメソッド・スタブ
 		String accessModifier = HelperToString.toString(this.accessModifier);
 		String staticStr = HelperToString.toString(this.isStatic, "static");
-		String disharmonies = HelperToString.toString(this.disharmnonySet);
 		String str
-		= String.format("%s.%s (%s, %s, %s) : %s",
-				this.definedClass, this.name, this.type, accessModifier, staticStr, disharmonies);
+		= String.format("%s.%s (%s, %s, %s)",
+				this.definedClass, this.name, this.type, accessModifier, staticStr);
 		return str;
 	}
 
@@ -116,9 +119,6 @@ public class AttributeInfo implements ElementInfo {
 
 		if ( !(attributeInfo.definedClass).equals(this.definedClass) )  return false;
 		if ( !(attributeInfo.name).equals(this.name) )  return false;
-		if ( !(attributeInfo.type).equals(this.type) )  return false;
-		// if ( !(attributeInfo.accessModifier).equals(this.accessModifier) )  return false;
-		// if ( attributeInfo.isStatic != this.isStatic )  return false;
 		return true;
 	}
 
@@ -129,9 +129,6 @@ public class AttributeInfo implements ElementInfo {
 		int hash = HASH_START;
 		hash = ( hash << 5 ) + this.definedClass.hashCode();
 		hash = ( hash << 5 ) + this.name.hashCode();
-		hash = ( hash << 5 ) + this.type.hashCode();
-		hash = ( hash << 5 ) + this.accessModifier.hashCode();
-		hash = this.isStatic?( (hash << 5) + HASH_CONSTANT):(hash << 5);
 		return hash;
 	}
 

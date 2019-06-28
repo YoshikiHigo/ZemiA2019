@@ -16,19 +16,35 @@ public class ClassInfo implements ElementInfo {
 	private String name;  // クラスの名前
 	private String superClassName = "java.lang.Object";  // 親クラス名
 
-	private HashSet<AttributeInfo> attributeList = new HashSet<AttributeInfo>();  // 属性の集合
-	private HashSet<MethodInfo> methodList = new HashSet<MethodInfo>();  // メソッドの集合
-
-	// private int numInherited;  // 継承された回数
+	private HashSet<AttributeInfo> attributeSet = new HashSet<AttributeInfo>();  // 属性の集合
+	private HashSet<MethodInfo> methodSet = new HashSet<MethodInfo>();  // メソッドの集合
 
 	private HashSet<Disharmony> disharmnonySet;  // Disharmonyの集合
 
+	private int brainMethodNum = 0;  // Brain Method の数
+
 
 	/* メトリクス */
+	private int atfd = 0;        // 外部クラスからのアクセス数 (getter, setterメソッド含む)
+	private int loc = 0;         // 空行, コメント行を含めた行数
+	private int nas = 0;         // 子クラスで定義したpublicメソッド数
+	private int noam = 0;        // getter, setterメソッド数
+	private int nom = 0;         // メソッド数
+	private int nopa = 0;        // public属性数
+	private int nprotm = 0;      // protectedメンバ数
+	private int tcc = 0;         // クラス凝集度 (共通にアクセスする属性とメソッドとの関係数)
 
-
+	private double amw = 0;
+	private double bovr = 0;
+	private double bur = 0;
+	private double noap = 0;
+	private double pnas = 0;
+	private double wmc = 0;
+	private double woc = 0;
 
 	/* ----- コンストラクタ ----- */
+	ClassInfo() {  return; }
+
 	ClassInfo(String name) {
 		this.setName(name);  return;
 	}
@@ -43,6 +59,47 @@ public class ClassInfo implements ElementInfo {
 
 		return;
 	}
+
+
+	/* ----- getterメソッド ----- */
+	@Override
+	public AccessModifier getAccessModifier() {
+		// TODO 自動生成されたメソッド・スタブ
+		return this.accessModifier;
+	}
+
+	@Override
+	public String getName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return new String(this.name);
+	}
+
+	public String getSuperClassName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return new String(this.superClassName);
+	}
+
+	public int getBrainMethodNum()
+	{
+		return this.brainMethodNum;
+	}
+
+	public int getATFD() { return this.atfd; }
+	public int getLOC() { return this.loc; }
+	public int getNAS() { return this.nas; }
+	public int getNOAM() { return this.noam; }
+	public int getNOM() { return this.nom; }
+	public int getNOPA() { return this.nopa; }
+	public int getNProtM() { return this.nprotm; }
+	public int getTCC() { return this.tcc; }
+
+	public double getAMW() { return this.amw; }
+	public double getBOvR() { return this.bovr; }
+	public double getBUR() { return this.bur; }
+	public double getNOAP() { return this.noap; }
+	public double getPNAS() { return this.pnas; }
+	public double getWMC() { return this.wmc; }
+	public double getWOC() { return this.woc; }
 
 
 	/* ----- setter メソッド ----- */
@@ -82,22 +139,24 @@ public class ClassInfo implements ElementInfo {
 		this.superClassName = new String(superClassName);  return;
 	}
 
-
-	/* ----- setterメソッド ----- */
-	@Override
-	public AccessModifier getAccessModifier() {
-		// TODO 自動生成されたメソッド・スタブ
-		return this.accessModifier;
-	}
-
-	@Override
-	public String getName() {
-		// TODO 自動生成されたメソッド・スタブ
-		return new String(this.name);
-	}
-
+	/* void に変える, setterメソッドを作る. */
+	public void setATFD(int atfd) { this.atfd = atfd; }
+	public void setLOC(int loc) { this.loc = loc; }
+	public void setNAS(int nas) { this.nas = nas; }
+	public void setNOAM(int noam) { this.noam = noam; }
+	public void setNOM(int nom) { this.nom = nom; }
+	public void setNOPA(int nopa) { this.nopa = nopa; }
+	public void setNProtM(int nprotm) { this.nprotm = nprotm; }
+	public void setTCC(int tcc) { this.tcc = tcc; }
 
 	/* ----- Method: メソッド ----- */
+	void calculateMetrics()
+	{
+		/* BOvU, BUR, NOAP, PNAS, WMC, WOC の値を計算 */
+		return;
+	}
+
+
 	@Override
 	public String toString() {
 		// TODO 自動生成されたメソッド・スタブ
@@ -119,8 +178,8 @@ public class ClassInfo implements ElementInfo {
 		if ( !(obj instanceof ClassInfo) )  return false;
 		ClassInfo classInfo = (ClassInfo) obj;
 
-		if ( !(classInfo.name).equals(this.name) )  return false;
-		return true;
+		if ( classInfo.name.equals(this.name) )  return true;
+		return false;
 	}
 
 
@@ -131,9 +190,6 @@ public class ClassInfo implements ElementInfo {
 		int hash = HASH_START;
 
 		hash = ( hash << 5 ) + this.name.hashCode();
-		hash = ( hash << 5 ) + this.accessModifier.hashCode();
-		hash = ( hash << 5 ) + this.classAbstraction.hashCode();
-		hash = ( hash << 5 ) + this.superClassName.hashCode();
 		return hash;
 	}
 
