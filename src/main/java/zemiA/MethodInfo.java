@@ -155,7 +155,7 @@ public class MethodInfo implements ElementInfo {
 	public void setLocalVariable(String VariableType, String VariableName)
 	{
 		/* マップのコピー */
-		this.variableMap.put(VariableName, VariableType);
+		this.variableMap.put(VariableName, VariableType);  return;
 	}
 
 	public void setATFD(int atfd) { this.atfd = atfd; }
