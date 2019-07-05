@@ -19,7 +19,7 @@ public class MethodInfo implements ElementInfo {
 	private boolean isAbstract;  // 抽象メソッドか否か
 	private String returnType;  // 返し値の型  (null: コンストラクタ)
 	private String name;  // 名前
-	private ArrayList<String> argumentsList= new ArrayList<String>();  // 引数の型リスト
+	private ArrayList<String> argumentsList= new ArrayList<String>();  // 引数名を型名のリスト
 
 	private HashMap<String, String> variableMap = new HashMap<String, String>();  // ローカル変数名と型名のマップ
 
@@ -146,11 +146,16 @@ public class MethodInfo implements ElementInfo {
 	}
 
 
-	public void setArgumentsList(ArrayList<String> argumentsList)
+	public void setArguments(String argumentType)
 	{
-		for ( String type: argumentsList) {
-			this.argumentsList.add(new String(type));
-		}
+		this.argumentsList.add(new String(argumentType));
+		return;
+	}
+
+	public void setLocalVariable(String VariableType, String VariableName)
+	{
+		/* マップのコピー */
+		this.variableMap.put(VariableName, VariableType);
 	}
 
 	public void setATFD(int atfd) { this.atfd = atfd; }

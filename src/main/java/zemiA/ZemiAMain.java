@@ -18,7 +18,7 @@ public class ZemiAMain {
 
 	private static final String PACKAGE_PATH = "src/main/java/";
 	private static final String JAVA_PACKAGE = "zemiA/";
-	private static final String JAVA_SOURCE = "ZemiAMain.java";
+	private static final String JAVA_SOURCE = "MethodInfo.java";
 
 	private HashSet<ClassInfo> classSet = new HashSet<ClassInfo>();  // クラスの集合
 
@@ -59,6 +59,6 @@ public class ZemiAMain {
 		System.out.println("NOM: " +  visitor.getNOM());
 		System.out.println("CYCLO: " +  visitor.getCYCLO());
 
-  }
+	}
 
 }

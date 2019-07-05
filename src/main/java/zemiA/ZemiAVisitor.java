@@ -73,11 +73,18 @@ public class ZemiAVisitor extends ASTVisitor {
 
 
 	/* ----- Method: メソッド ----- */
+
+
+
+
 	@Override
 	public boolean visit(SimpleName node) {
 		// System.out.println(node.getIdentifier());
 		return super.visit(node);
 	}
+
+
+
 
 	/* メンバ定義 */
 	@Override
@@ -96,7 +103,7 @@ public class ZemiAVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(Block node) {  // {}ブロック検出
 		// TODO 自動生成されたメソッド・スタブ
-		// System.err.println(node.toString());
+		// System.out.println(node.toString());
 		return super.visit(node);
 	}
 
