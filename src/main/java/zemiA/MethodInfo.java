@@ -23,7 +23,7 @@ public class MethodInfo implements ElementInfo {
 
 	private HashMap<String, String> variableMap = new HashMap<String, String>();  // ローカル変数名と型名のマップ
 
-	private HashSet<Disharmony> disharmnonySet;  // Disharmonyの集合
+	private HashSet<Disharmony> disharmnonySet = new HashSet<Disharmony>();  // Disharmonyの集合
 
 	/* メトリクス */
 	private int atfd = 0;        // 外部クラスからのアクセス数 (getter, setterメソッド含む)
@@ -173,6 +173,15 @@ public class MethodInfo implements ElementInfo {
 	void calculateMetrics()
 	{
 		/* LAA の値を計算 */
+	}
+
+
+	/* Disharmony の決定 */
+	public void decideDisharmony()
+	{
+		Disharmony tmp = DetectionDisharmony.brainMethod(this);
+		if ( tmp != null )  this.disharmnonySet.add(tmp);
+		return;
 	}
 
 
