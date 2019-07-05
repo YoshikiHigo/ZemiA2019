@@ -85,10 +85,15 @@ public class ClassInfo implements ElementInfo {
 		return this.brainMethodNum;
 	}
 
-	public LinkedHashSet<MethodInfo> getMethodSet() {
+	public LinkedHashSet<MethodInfo> getMethodSet()
+	{
 		return this.methodSet;
 	}
 
+	public LinkedHashSet<AttributeInfo> getAttributeSet()
+	{
+		return this.attributeSet;
+	}
 
 	public int getATFD() { return this.atfd; }
 	public int getCYCLO() { return this.cyclo; }
@@ -149,11 +154,15 @@ public class ClassInfo implements ElementInfo {
 
 	public void setMethodInfo(MethodInfo methodInfo)
 	{
-		this.methodSet.add(methodInfo);
-		return;
+		this.methodSet.add(methodInfo);  return;
 	}
 
-	/* void に変える, setterメソッドを作る. */
+	public void setAttributeInfo(AttributeInfo attributeInfo)
+	{
+		this.attributeSet.add(attributeInfo);  return;
+	}
+
+	/* setterメソッドを作る. */
 	public void setATFD(int atfd) { this.atfd = atfd; }
 	public void setCYCLO(int cyclo) { this.cyclo = cyclo; }
 	public void setLOC(int loc) { this.loc = loc; }

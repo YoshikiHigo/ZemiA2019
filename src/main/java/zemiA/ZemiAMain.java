@@ -63,6 +63,9 @@ public class ZemiAMain {
 	{
 		for( ClassInfo classInfo : classSet) {
 			System.out.println(classInfo.toString());
+			for( AttributeInfo attributeInfo : classInfo.getAttributeSet() )
+				System.out.println( attributeInfo.toString() );
+
 			for( MethodInfo methodInfo : classInfo.getMethodSet() ) {
 				methodInfo.decideDisharmony();
 				System.out.println(methodInfo.toString());

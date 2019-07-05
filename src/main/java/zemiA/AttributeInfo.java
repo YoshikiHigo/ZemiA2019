@@ -56,7 +56,6 @@ public class AttributeInfo implements ElementInfo {
 		return new String(this.name);
 	}
 
-
 	/* ----- setter メソッド ----- */
 	public void setDefinedClass(String definedClass)
 	{
@@ -104,7 +103,7 @@ public class AttributeInfo implements ElementInfo {
 		String accessModifier = HelperToString.toString(this.accessModifier);
 		String staticStr = HelperToString.toString(this.isStatic, "static");
 		String str
-		= String.format("%s.%s (%s, %s, %s)",
+		= String.format("%s.%s [%s, %s, %s]",
 				this.definedClass, this.name, this.type, accessModifier, staticStr);
 		return str;
 	}

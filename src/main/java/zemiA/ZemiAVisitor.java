@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.BreakStatement;
 import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.DoStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.IfStatement;
@@ -18,6 +19,7 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.SwitchCase;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
 
@@ -127,6 +129,29 @@ public class ZemiAVisitor extends ASTVisitor {
 			if(x == '\n')  loc++;
 		classInfo.setLOC(loc);
 
+
+		/* 属性定義 */
+		FieldDeclaration[] fieldArray = node.getFields();
+		for ( FieldDeclaration  fields : fieldArray ) {
+			for ( Object tmp : fields.fragments() ) {
+				VariableDeclarationFragment field = (VariableDeclarationFragment)tmp;
+
+				AttributeInfo attributeInfo = new AttributeInfo( field.getName().toString() );
+				attributeInfo.setDefinedClass(classInfo.getName());
+				attributeInfo.setType(fields.getType().toString());
+
+				for(Object tmp0: fields.modifiers()) {  // アクセス修飾子
+					String modifier = ((IExtendedModifier)tmp0).toString();
+					if ( modifier.contains("@") )  continue;
+					if ( modifier.equals("public") || modifier.equals("protected") || modifier.equals("private") ) {
+						attributeInfo.setAccessModifier(modifier);
+					} else if ( modifier.equals("static") )  attributeInfo.setIsStatic(true);
+				}
+
+				classInfo.setAttributeInfo(attributeInfo);
+			}
+		}
+
 		this.nowClassInfo = classInfo;  this.classSet.add(classInfo);
 		return super.visit(node);
 	}
@@ -149,7 +174,7 @@ public class ZemiAVisitor extends ASTVisitor {
 		int loc = 0;  // コード行数
 
 		MethodInfo methodInfo = new MethodInfo(node.getName().toString());
-		methodInfo.setDefinedClass(nowClassInfo.getName());  // メソッド名
+		methodInfo.setDefinedClass(nowClassInfo.getName());  // クラス名
 
 		Type returnType = node.getReturnType2();  // 返し値の型
 		if (returnType != null)  methodInfo.setReturnType(returnType.toString());
@@ -162,7 +187,8 @@ public class ZemiAVisitor extends ASTVisitor {
 		}
 		methodInfo.setArgumentsList(argumentList);
 
-		for(Object tmp: node.modifiers()) {  // アクセス修飾子
+
+		for(Object tmp: node.modifiers()) {  // アクセス修飾子, 静的, 抽象メソッド
 			String modifier = ((IExtendedModifier)tmp).toString();
 			if ( modifier.contains("@") )  continue;
 			if ( modifier.equals("public") || modifier.equals("protected") || modifier.equals("private") ) {
