@@ -145,10 +145,15 @@ public class MethodInfo implements ElementInfo {
 		this.name = new String(name);  return;
 	}
 
-
 	public void setArguments(String argumentType)
 	{
 		this.argumentsList.add(new String(argumentType));
+		return;
+	}
+
+	public void setArgumentsList(ArrayList<String> argumentList)
+	{
+		this.argumentsList = argumentList;
 		return;
 	}
 
