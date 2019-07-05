@@ -185,6 +185,7 @@ public class ZemiAVisitor extends ASTVisitor {
 			SingleVariableDeclaration args = (SingleVariableDeclaration)tmp;
 			if ( args != null )  argumentList.add( args.getType().toString() );
 		}
+
 		methodInfo.setArgumentsList(argumentList);
 
 
@@ -196,7 +197,6 @@ public class ZemiAVisitor extends ASTVisitor {
 			} else if ( modifier.equals("static") )  methodInfo.setIsStatic(true);
 			else if ( modifier.equals("abstract") )  methodInfo.setIsAbstract(true);
 		}
-
 
 		/* loc計測 */
 		String methodStr = node.toString();
