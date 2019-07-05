@@ -16,7 +16,7 @@ public class HelperToString {
 	/** AccessModifier -> String */
 	public static String toString(AccessModifier accessModifier)
 	{
-		String str = null;
+		String str = "";
 		switch(accessModifier) {
 		case PRIVATE:    str = "private";  break;
 		case PROTECTED:  str = "protected"; break;
@@ -31,7 +31,7 @@ public class HelperToString {
 	/** ClassAbstraction -> String */
 	public static String toString(ClassAbstraction classAbstraction)
 	{
-		String str = null;
+		String str = "";
 		switch(classAbstraction) {
 		case ABSTRACT_CLASS:   str = "abstract";  break;
 		case INTERFACE_CLASS:  str = "interface"; break;
@@ -45,7 +45,7 @@ public class HelperToString {
 	/** boolean -> String */
 	public static String toString(boolean isSomething, String argumentString)
 	{
-		String str = null;
+		String str = "";
 		switch(argumentString) {
 		case "static":    str = isSomething?"static":"dynamic";  break;
 		case "abstract":  str = isSomething?", abstruct":"";  break;
@@ -58,7 +58,7 @@ public class HelperToString {
 	/** ArrayList<String> -> String */
 	public static String toString(ArrayList<String> argumentsList)
 	{
-		String str = null;
+		String str = "";
 		boolean isFirst = true;
 		for (String argument: argumentsList) {
 			if (!isFirst)  str = str + ", ";
@@ -73,8 +73,9 @@ public class HelperToString {
 	/** Disharmony -> String */
 	public static String toString(HashSet<Disharmony> disharmnonySet)
 	{
-		String str = null;
+		String str = "";
 		boolean isFirst = true;
+		if ( disharmnonySet == null )  return null;
 		for (Disharmony disharmony: disharmnonySet) {
 			if (!isFirst)  str = str + "  ";
 			switch(disharmony) {

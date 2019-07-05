@@ -1,6 +1,6 @@
 package zemiA;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 
 
@@ -11,21 +11,22 @@ import java.util.HashSet;
 public class ClassInfo implements ElementInfo {
 
 	/* ----- Attribute: 属性 ----- */
-	private AccessModifier accessModifier;  // アクセス修飾子
+	private AccessModifier accessModifier = AccessModifier.PACKAGE_PRIVATE;  // アクセス修飾子
 	private ClassAbstraction classAbstraction;  // クラスの抽象度
 	private String name;  // クラスの名前
 	private String superClassName = "java.lang.Object";  // 親クラス名
 
-	private HashSet<AttributeInfo> attributeSet = new HashSet<AttributeInfo>();  // 属性の集合
-	private HashSet<MethodInfo> methodSet = new HashSet<MethodInfo>();  // メソッドの集合
+	private LinkedHashSet<AttributeInfo> attributeSet = new LinkedHashSet<AttributeInfo>();  // 属性の集合
+	private LinkedHashSet<MethodInfo> methodSet = new LinkedHashSet<MethodInfo>();  // メソッドの集合
 
-	private HashSet<Disharmony> disharmnonySet;  // Disharmonyの集合
+	private LinkedHashSet<Disharmony> disharmnonySet = new LinkedHashSet<Disharmony>();  // Disharmonyの集合
 
 	private int brainMethodNum = 0;  // Brain Method の数
 
 
 	/* メトリクス */
 	private int atfd = 0;        // 外部クラスからのアクセス数 (getter, setterメソッド含む)
+	private int cyclo = 0;
 	private int loc = 0;         // 空行, コメント行を含めた行数
 	private int nas = 0;         // 子クラスで定義したpublicメソッド数
 	private int noam = 0;        // getter, setterメソッド数
@@ -84,7 +85,13 @@ public class ClassInfo implements ElementInfo {
 		return this.brainMethodNum;
 	}
 
+	public LinkedHashSet<MethodInfo> getMethodSet() {
+		return this.methodSet;
+	}
+
+
 	public int getATFD() { return this.atfd; }
+	public int getCYCLO() { return this.cyclo; }
 	public int getLOC() { return this.loc; }
 	public int getNAS() { return this.nas; }
 	public int getNOAM() { return this.noam; }
@@ -139,8 +146,16 @@ public class ClassInfo implements ElementInfo {
 		this.superClassName = new String(superClassName);  return;
 	}
 
+
+	public void setMethodInfo(MethodInfo methodInfo)
+	{
+		this.methodSet.add(methodInfo);
+		return;
+	}
+
 	/* void に変える, setterメソッドを作る. */
 	public void setATFD(int atfd) { this.atfd = atfd; }
+	public void setCYCLO(int cyclo) { this.cyclo = cyclo; }
 	public void setLOC(int loc) { this.loc = loc; }
 	public void setNAS(int nas) { this.nas = nas; }
 	public void setNOAM(int noam) { this.noam = noam; }

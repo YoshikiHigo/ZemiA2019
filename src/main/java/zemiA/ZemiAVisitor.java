@@ -1,25 +1,23 @@
 package zemiA;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.BreakStatement;
-import org.eclipse.jdt.core.dom.CatchClause;
-import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.DoStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.ForStatement;
+import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.IfStatement;
-import org.eclipse.jdt.core.dom.LineComment;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.ModuleDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
-import org.eclipse.jdt.core.dom.SuperFieldAccess;
-import org.eclipse.jdt.core.dom.SuperMethodInvocation;
-import org.eclipse.jdt.core.dom.SuperMethodReference;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.SwitchCase;
-import org.eclipse.jdt.core.dom.TryStatement;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
 
@@ -53,6 +51,26 @@ public class ZemiAVisitor extends ASTVisitor {
 	private int nprotm = 0;      // protectedメンバ数
 	private int tcc = 0;         // クラス凝集度 (共通にアクセスする属性とメソッドとの関係数)
 
+	private ClassInfo nowClassInfo;
+	private MethodInfo nowMethodInfo;
+	private HashSet<ClassInfo> classSet;
+
+	private int methodCyclo = 0;
+	private int methodMaxNesting = 0;
+	private int methodNoav = 0;
+
+	/* ----- コンストラクタ ----- */
+	public ZemiAVisitor()
+	{
+		return;
+	}
+
+	public ZemiAVisitor(HashSet<ClassInfo> classSet)
+	{
+		this.classSet = classSet;
+		return;
+	}
+
 
 	/* ----- getter メソッド ----- */
 	public int getATFD() { return this.atfd; }
@@ -71,10 +89,7 @@ public class ZemiAVisitor extends ASTVisitor {
 	public int getNProtM() { return this.nprotm; }
 	public int getTCC() { return this.tcc; }
 
-
 	/* ----- Method: メソッド ----- */
-
-
 
 
 	@Override
@@ -84,48 +99,88 @@ public class ZemiAVisitor extends ASTVisitor {
 	}
 
 
+	@Override
+	public boolean visit(TypeDeclaration node) {
+		// TODO 自動生成されたメソッド・スタブ
+		if (this.nowClassInfo != null) {
+			this.nowClassInfo.setLOC(this.loc);
+			this.nowClassInfo.setCYCLO(this.cyclo);
+		}
+
+		this.loc=0;
+
+		ClassInfo classInfo = new ClassInfo(node.getName().toString());
+		classInfo.setClassAbstraction(false, node.isInterface());
+
+		Type superClassType = node.getSuperclassType();
+		if ( superClassType != null ) classInfo.setSuperClassName(superClassType.toString());
+		System.out.println(classInfo.toString());
+
+		String classStr = node.toString();
+		for(char x: classStr.toCharArray())  // 命令行のカウント
+			if(x == '\n')  loc++;
+		classInfo.setLOC(loc);
+
+		this.nowClassInfo = classInfo;  this.classSet.add(classInfo);
+		return super.visit(node);
+	}
 
 
 	/* メンバ定義 */
 	@Override
 	public boolean visit(MethodDeclaration node) {  // メソッド定義検出
-		this.nom++;  // メソッド数のカウント
-		String methodStr = node.toString();
+		if ( this.nowMethodInfo != null ) {
+			this.nowMethodInfo.setCYCLO(this.methodCyclo);
+			this.nowMethodInfo.setMAXNESTING(this.methodMaxNesting);
+			this.nowMethodInfo.setNOAV(this.methodNoav);
+		}
 
+		this.nom++;  // メソッド数のカウント
+		this.nowClassInfo.setNOM(this.nom);
+
+		this.methodCyclo = 0;  this.methodMaxNesting = 0; this.methodNoav = 0;
+
+		int loc = 0;  // コード行数
+
+		MethodInfo methodInfo = new MethodInfo(node.getName().toString());
+		methodInfo.setDefinedClass(nowClassInfo.getName());  // メソッド名
+
+		Type returnType = node.getReturnType2();  // 返し値の型
+		if (returnType != null)  methodInfo.setReturnType(returnType.toString());
+		if ( node.isConstructor() )  methodInfo.setReturnType("Constructor");
+
+		ArrayList<String> argumentList = new ArrayList<String>();  // 引数型の列
+		for ( Object tmp : node.parameters() ) {
+			SingleVariableDeclaration args = (SingleVariableDeclaration)tmp;
+			if ( args != null )  argumentList.add( args.getType().toString() );
+		}
+		methodInfo.setArgumentsList(argumentList);
+
+		for(Object tmp: node.modifiers()) {  // アクセス修飾子
+			String modifier = ((IExtendedModifier)tmp).toString();
+			if ( modifier.contains("@") )  continue;
+			methodInfo.setAccessModifier(modifier);
+		}
+
+
+		/* loc計測 */
+		String methodStr = node.toString();
 		for(char x: methodStr.toCharArray())  // 命令行のカウント
 			if(x == '\n')  loc++;
+		methodInfo.setLOC(loc);
 
-		// System.err.println(node.toString());
+		System.out.println(methodInfo.toString());
+
+		this.nowMethodInfo = methodInfo;
+		this.nowClassInfo.setMethodInfo(methodInfo);
 		return super.visit(node);
 	}
-
 
 	@Override
 	public boolean visit(Block node) {  // {}ブロック検出
 		// TODO 自動生成されたメソッド・スタブ
 		// System.out.println(node.toString());
-		return super.visit(node);
-	}
 
-	@Override
-	public boolean visit(ConditionalExpression node) {
-		// TODO 自動生成されたメソッド・スタブ
-
-		return super.visit(node);
-	}
-
-
-	@Override
-	public boolean visit(LineComment node) {
-		// TODO 自動生成されたメソッド・スタブ
-		System.err.println(node.toString());
-		return super.visit(node);
-	}
-
-	@Override
-	public boolean visit(ModuleDeclaration node) {  //
-		// TODO 自動生成されたメソッド・スタブ
-		System.out.println(node.toString());
 		return super.visit(node);
 	}
 
@@ -133,28 +188,29 @@ public class ZemiAVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(IfStatement node) {  // if文検出 (if の塊. else 単体は検出せず)
 		// TODO 自動生成されたメソッド・スタブ
-		this.cyclo++;
+		this.methodCyclo++;  this.cyclo++;
+		System.err.println(methodCyclo);
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(BreakStatement node) {  // break文検出
 		// TODO 自動生成されたメソッド・スタブ
-		this.cyclo++;
+		this.methodCyclo++;  this.cyclo++;
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(ContinueStatement node) {  // continue文検出
 		// TODO 自動生成されたメソッド・スタブ
-		this.cyclo++;
+		this.methodCyclo++;  this.cyclo++;
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(SwitchCase node) {  // case, dafault文検出
 		// TODO 自動生成されたメソッド・スタブ
-		this.cyclo++;
+		this.methodCyclo++;  this.cyclo++;
 		return super.visit(node);
 	}
 
@@ -163,77 +219,28 @@ public class ZemiAVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(ForStatement node) {  // for文検出
 		// TODO 自動生成されたメソッド・スタブ
-		this.cyclo++;
+		this.methodCyclo++;  this.cyclo++;
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(EnhancedForStatement node) {  // for-each文検出
 		// TODO 自動生成されたメソッド・スタブ
-		this.cyclo++;
+		this.methodCyclo++;  this.cyclo++;
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(WhileStatement node) {  // while文検出
 		// TODO 自動生成されたメソッド・スタブ
-		this.cyclo++;
+		this.methodCyclo++;  this.cyclo++;
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(DoStatement node) {  // do-while文検出
 		// TODO 自動生成されたメソッド・スタブ
-		this.cyclo++;
+		this.methodCyclo++;  this.cyclo++;
 		return super.visit(node);
 	}
-
-
-	/* 例外処理における条件分岐 */
-	@Override
-	public boolean visit(TryStatement node) {  // try文検出 (try-catch塊につき1回)
-		// TODO 自動生成されたメソッド・スタブ
-		// System.err.println(node.toString());
-		return super.visit(node);
-	}
-
-	@Override
-	public boolean visit(CatchClause node) {  // catch文検出
-		// TODO 自動生成されたメソッド・スタブ
-		// System.err.println(node.toString());
-		return super.visit(node);
-	}
-
-
-	/* 親クラス関係 */
-	@Override
-	public boolean visit(SuperConstructorInvocation node) {  // コンストラクタ定義の検出
-		// TODO 自動生成されたメソッド・スタブ
-		return super.visit(node);
-	}
-
-	@Override
-	public boolean visit(SuperFieldAccess node) {  // 親クラスで定義されたフィールドへのアクセスを検出
-		// TODO 自動生成されたメソッド・スタブ
-		return super.visit(node);
-	}
-
-	@Override
-	public boolean visit(SuperMethodInvocation node) {
-		// TODO 自動生成されたメソッド・スタブ
-		return super.visit(node);
-	}
-
-
-	@Override
-	public boolean visit(SuperMethodReference node) {  // 親クラスで定義されたメソッドの参照を検出
-		// TODO 自動生成されたメソッド・スタブ
-		// System.err.println(node.toString());
-		return super.visit(node);
-	}
-
-	/* visit(LineComment)
-	 *  は何もしない.
-	 *  */
-
 }

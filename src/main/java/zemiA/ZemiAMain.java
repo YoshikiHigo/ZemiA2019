@@ -3,7 +3,7 @@ package zemiA;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -18,9 +18,9 @@ public class ZemiAMain {
 
 	private static final String PACKAGE_PATH = "src/main/java/";
 	private static final String JAVA_PACKAGE = "zemiA/";
-	private static final String JAVA_SOURCE = "MethodInfo.java";
+	private static final String JAVA_SOURCE = "DetectionDisharmony.java";
 
-	private HashSet<ClassInfo> classSet = new HashSet<ClassInfo>();  // クラスの集合
+	private static LinkedHashSet<ClassInfo> classSet = new LinkedHashSet<ClassInfo>();  // クラスの集合
 
 
 	private static ZemiAVisitor visitSource(String javaSourcePath)
@@ -45,7 +45,7 @@ public class ZemiAMain {
 			return null;
 		}
 
-		final ZemiAVisitor visitor = new ZemiAVisitor();
+		final ZemiAVisitor visitor = new ZemiAVisitor(classSet);
 		unit.accept(visitor);
 
 		return visitor;
@@ -55,10 +55,24 @@ public class ZemiAMain {
 	public static void main(final String[] args) {
 		ZemiAVisitor visitor = visitSource(PACKAGE_PATH + JAVA_PACKAGE + JAVA_SOURCE);
 
+		for( ClassInfo classInfo : classSet) {
+			System.out.println(classInfo.toString());
+			for( MethodInfo methodInfo : classInfo.getMethodSet() ) {
+				methodInfo.decideDisharmony();
+				System.out.println(methodInfo.toString());
+				System.out.println(methodInfo.getLOC());
+				System.out.println(methodInfo.getCYCLO());
+				System.out.println(methodInfo.getMAXNESTING());
+				System.out.println(methodInfo.getNOAV());
+			}
+		}
+
+		return;
+/*
 		System.out.println("LOC: " + visitor.getLOC());
 		System.out.println("NOM: " +  visitor.getNOM());
 		System.out.println("CYCLO: " +  visitor.getCYCLO());
-
+*/
 	}
 
 }

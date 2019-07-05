@@ -14,11 +14,11 @@ public class MethodInfo implements ElementInfo {
 
 	/* ----- Attribute: 属性 ----- */
 	private String definedClass;  // 定義されているクラス
-	private AccessModifier accessModifier;  // アクセス修飾子
+	private AccessModifier accessModifier = AccessModifier.PACKAGE_PRIVATE;  // アクセス修飾子
 	private boolean isStatic;  // 静的メソッドか否か
 	private boolean isAbstract;  // 抽象メソッドか否か
-	private String returnType;  // 返し値の型  (null: コンストラクタ)
-	private String name;  // 名前
+	private String returnType = "";  // 返し値の型  (null: コンストラクタ)
+	private String name = "";  // 名前
 	private ArrayList<String> argumentsList= new ArrayList<String>();  // 引数名を型名のリスト
 
 	private HashMap<String, String> variableMap = new HashMap<String, String>();  // ローカル変数名と型名のマップ
@@ -227,7 +227,8 @@ public class MethodInfo implements ElementInfo {
 		int hash = HASH_START;
 		hash = ( hash << 5 ) + this.definedClass.hashCode();
 		hash = ( hash << 5 ) + this.name.hashCode();
-		hash = ( hash << 5 ) + this.argumentsList.hashCode();
+		if (this.argumentsList == null)  hash = ( hash << 5 );
+		else  hash = ( hash << 5 ) + this.argumentsList.hashCode();
 		return hash;
 	}
 }
