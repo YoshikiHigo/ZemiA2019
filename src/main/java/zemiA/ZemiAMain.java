@@ -18,7 +18,7 @@ public class ZemiAMain {
 
 	private static final String PACKAGE_PATH = "src/main/java/";
 	private static final String JAVA_PACKAGE = "zemiA/";
-	private static final String JAVA_SOURCE = "DetectionDisharmony.java";
+	private static final String JAVA_SOURCE = "MethodInfo.java";
 
 	private static LinkedHashSet<ClassInfo> classSet = new LinkedHashSet<ClassInfo>();  // クラスの集合
 
@@ -60,10 +60,10 @@ public class ZemiAMain {
 			for( MethodInfo methodInfo : classInfo.getMethodSet() ) {
 				methodInfo.decideDisharmony();
 				System.out.println(methodInfo.toString());
-				System.out.println(methodInfo.getLOC());
-				System.out.println(methodInfo.getCYCLO());
-				System.out.println(methodInfo.getMAXNESTING());
-				System.out.println(methodInfo.getNOAV());
+				System.out.println("LOC: "+methodInfo.getLOC());
+				System.out.println("CYCLO: "+methodInfo.getCYCLO());
+				System.out.println("MAXNESTING: "+methodInfo.getMAXNESTING());
+				System.out.println("NOAV: "+methodInfo.getNOAV());
 			}
 		}
 

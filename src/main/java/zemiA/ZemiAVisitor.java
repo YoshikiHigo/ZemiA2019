@@ -53,6 +53,7 @@ public class ZemiAVisitor extends ASTVisitor {
 
 	private ClassInfo nowClassInfo;
 	private MethodInfo nowMethodInfo;
+	private boolean isMethodBlock = false;
 	private HashSet<ClassInfo> classSet;
 
 	private int methodCyclo = 0;
@@ -107,7 +108,7 @@ public class ZemiAVisitor extends ASTVisitor {
 			this.nowClassInfo.setCYCLO(this.cyclo);
 		}
 
-		this.loc=0;
+		this.loc=0;  this.cyclo=0;
 
 		ClassInfo classInfo = new ClassInfo(node.getName().toString());
 		classInfo.setClassAbstraction(false, node.isInterface());
@@ -169,17 +170,31 @@ public class ZemiAVisitor extends ASTVisitor {
 			if(x == '\n')  loc++;
 		methodInfo.setLOC(loc);
 
-		System.out.println(methodInfo.toString());
-
 		this.nowMethodInfo = methodInfo;
 		this.nowClassInfo.setMethodInfo(methodInfo);
+
+		this.isMethodBlock = true;
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(Block node) {  // {}ブロック検出
 		// TODO 自動生成されたメソッド・スタブ
-		// System.out.println(node.toString());
+		// System.err.println(node.toString());
+		if (this.isMethodBlock) {
+			this.isMethodBlock = false;  return  super.visit(node);
+		}
+
+
+		/* MAXESTING 検出 */
+		String lineArray[] = node.toString().split("\n");
+		int nestCount = 0;
+		for(String line : lineArray){
+			if(line.contains("{")) {nestCount++;}
+			this.maxNesting = this.maxNesting < nestCount? nestCount:this.maxNesting;
+			this.methodMaxNesting = this.methodMaxNesting < nestCount? nestCount:this.methodMaxNesting;
+			if(line.contains("}")) {nestCount--;}
+		}
 
 		return super.visit(node);
 	}
@@ -189,7 +204,6 @@ public class ZemiAVisitor extends ASTVisitor {
 	public boolean visit(IfStatement node) {  // if文検出 (if の塊. else 単体は検出せず)
 		// TODO 自動生成されたメソッド・スタブ
 		this.methodCyclo++;  this.cyclo++;
-		System.err.println(methodCyclo);
 		return super.visit(node);
 	}
 
