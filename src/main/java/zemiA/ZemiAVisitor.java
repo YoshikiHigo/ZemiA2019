@@ -113,9 +113,14 @@ public class ZemiAVisitor extends ASTVisitor {
 		ClassInfo classInfo = new ClassInfo(node.getName().toString());
 		classInfo.setClassAbstraction(false, node.isInterface());
 
-		Type superClassType = node.getSuperclassType();
+		Type superClassType = node.getSuperclassType();  // スーパークラス
 		if ( superClassType != null ) classInfo.setSuperClassName(superClassType.toString());
-		System.out.println(classInfo.toString());
+
+		for(Object tmp: node.modifiers()) {  // アクセス修飾子
+			String modifier = ((IExtendedModifier)tmp).toString();
+			if ( modifier.contains("@") )  continue;
+			classInfo.setAccessModifier(modifier);
+		}
 
 		String classStr = node.toString();
 		for(char x: classStr.toCharArray())  // 命令行のカウント
@@ -160,7 +165,10 @@ public class ZemiAVisitor extends ASTVisitor {
 		for(Object tmp: node.modifiers()) {  // アクセス修飾子
 			String modifier = ((IExtendedModifier)tmp).toString();
 			if ( modifier.contains("@") )  continue;
-			methodInfo.setAccessModifier(modifier);
+			if ( modifier.equals("public") || modifier.equals("protected") || modifier.equals("private") ) {
+				methodInfo.setAccessModifier(modifier);
+			} else if ( modifier.equals("static") )  methodInfo.setIsStatic(true);
+			else if ( modifier.equals("abstract") )  methodInfo.setIsAbstract(true);
 		}
 
 

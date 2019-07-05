@@ -48,7 +48,7 @@ public class HelperToString {
 		String str = "";
 		switch(argumentString) {
 		case "static":    str = isSomething?"static":"dynamic";  break;
-		case "abstract":  str = isSomething?", abstruct":"";  break;
+		case "abstract":  str = isSomething?", abstruct":"implemented";  break;
 		default:          str = "";
 		}
 		return str;

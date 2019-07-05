@@ -58,7 +58,7 @@ public class DetectionDisharmony {
 	private static final int FEW = 3;
 	private static final int SEVERAL = 5;
 	private static final int SHORT_MEMORY_CAPACITY = 7;
-	private static final int MANY = 5;
+	private static final int MANY = 10;
 
 	/* ----- Disharmony 検出メソッド ----- */
 	/* God Class 検出 */
